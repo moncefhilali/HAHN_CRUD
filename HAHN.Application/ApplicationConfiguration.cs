@@ -6,6 +6,10 @@ namespace HAHN.Application
     {
         public static IServiceCollection AddDependecyInjectionApplication(this IServiceCollection services)
         {
+            // MediatR
+            services.AddMediatR(config => 
+                config.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));
+
             return services;
         }
     }

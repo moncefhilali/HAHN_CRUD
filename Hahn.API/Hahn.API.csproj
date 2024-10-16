@@ -15,10 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\HAHN.Application\HAHN.Application.csproj" />
     <ProjectReference Include="..\HAHN.Infrastructure\HAHN.Infrastructure.csproj" />
   </ItemGroup>

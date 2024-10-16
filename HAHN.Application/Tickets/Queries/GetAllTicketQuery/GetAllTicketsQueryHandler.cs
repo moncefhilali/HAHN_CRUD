@@ -2,7 +2,7 @@
 using HAHN.Domain.Interfaces;
 using MediatR;
 
-namespace HAHN.Application.Tickets.Queries
+namespace HAHN.Application.Tickets.Queries.GetAllTicketQuery
 {
     public class GetAllTicketsQueryHandler : IRequestHandler<GetAllTicketsQuery, List<Ticket?>>
     {
@@ -14,7 +14,7 @@ namespace HAHN.Application.Tickets.Queries
 
         public async Task<List<Ticket?>> Handle(GetAllTicketsQuery request, CancellationToken cancellationToken)
         {
-            var tickets =  await _repository.GetAllAsync();
+            var tickets = await _repository.GetAllAsync();
 
             // apply filtering
 
