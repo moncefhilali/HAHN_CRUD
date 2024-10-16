@@ -39,14 +39,15 @@ namespace HAHN.Infrastructure.Repositories
             return entity;
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
             var data = await _table.FindAsync(id);
-            if (data != null)
-            {
-                _table.Remove(data);
-                await _context.SaveChangesAsync();
-            }
+            if (data is null)
+                return false;
+            
+            _table.Remove(data);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
         public async Task<T?> UpdateAsync(int id, T entity)

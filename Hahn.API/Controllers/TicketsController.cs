@@ -29,5 +29,23 @@ namespace Hahn.API.Controllers
             var response = await _mediator.Send(new CreateTicket.Command() { Ticket = ticket });
             return Ok(response);
         }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateTicket(int id, Ticket ticket)
+        {
+            var response = await _mediator.Send(new UpdateTicket.Command() { Id = id, Ticket = ticket });
+            return Ok(response);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteTicket(int id)
+        {
+            bool response = await _mediator.Send(new DeleteTicket.Command() { Id = id });
+
+            if (response)
+                return Ok();
+
+            return BadRequest();
+        }
     }
 }
