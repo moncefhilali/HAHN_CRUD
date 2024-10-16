@@ -8,7 +8,5 @@ namespace HAHN.Infrastructure.Repositories
     {
         private readonly HahnDbContext _context;
         public TicketRepository(HahnDbContext context) : base(context) => _context = context;
-
-
     }
 }
