@@ -19,8 +19,4 @@
     <ProjectReference Include="..\HAHN.Application\HAHN.Application.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Repositories\" />
-  </ItemGroup>
-
 </Project>
