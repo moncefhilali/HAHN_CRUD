@@ -2,7 +2,7 @@
 using HAHN.Domain.Interfaces;
 using MediatR;
 
-namespace HAHN.Application.Tickets.Queries.GetAllTicketQuery
+namespace HAHN.Application.Tickets.Queries.GetAllTicketsQuery
 {
     public class GetAllTicketsQueryHandler : IRequestHandler<GetAllTicketsQuery, List<Ticket?>>
     {

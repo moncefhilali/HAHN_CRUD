@@ -28,10 +28,15 @@ namespace HAHN.Infrastructure.Repositories
         }
 
 
-        public async Task CreateAsync(T entity)
+        public async Task<T?> CreateAsync(T entity)
         {
+            bool exists = await _table.AnyAsync(e => e == entity);
+            if (exists)
+                return null;
+
             await _table.AddAsync(entity);
             await _context.SaveChangesAsync();
+            return entity;
         }
 
         public async Task DeleteAsync(int id)
@@ -44,14 +49,15 @@ namespace HAHN.Infrastructure.Repositories
             }
         }
 
-        public async Task UpdateAsync(int id, T entity)
+        public async Task<T?> UpdateAsync(int id, T entity)
         {
             var data = await _table.FindAsync(id);
-            if (data != null)
-            {
-                _context.Entry(data).CurrentValues.SetValues(entity);
-                await _context.SaveChangesAsync();
-            }
+            if (data is null)
+                return null;
+
+            _context.Entry(data).CurrentValues.SetValues(entity);
+            await _context.SaveChangesAsync();
+            return data;
         }
     }
 }
