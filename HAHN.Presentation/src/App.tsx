@@ -14,7 +14,7 @@ function App() {
   return (
     <>
       <h1>CRUD</h1>
-      {tickets && tickets.map((ticket) => <ul>{ticket}</ul>)}
+      {tickets && tickets.map((ticket: any) => <ul>{ticket.ticketId}</ul>)}
     </>
   );
 }
