@@ -13,7 +13,7 @@ namespace HAHN.Domain.Entities
 
     public enum TicketStatus
     {
-        Open,
-        Closed
+        Closed,
+        Open
     }
 }
