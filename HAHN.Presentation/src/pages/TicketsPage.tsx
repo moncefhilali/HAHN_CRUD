@@ -10,14 +10,19 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Ticket } from "../types/Ticket";
+import { Ticket } from "../models/Ticket";
 import { format } from "date-fns";
-import { confirmAlert } from "react-confirm-alert"; // Import
-import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
 import { toast } from "react-toastify";
+import UpdateTicket from "../components/UpdateTicket";
+import AddTicket from "../components/AddTicket";
 
 export default function TicketsPage() {
   const [tickets, setTickets] = useState<Ticket[]>([]);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
+  const [currentTicket, setCurrentTicket] = useState<Ticket>();
 
   useEffect(() => {
     axios.get("https://localhost:7127/api/Tickets").then((response) => {
@@ -87,6 +92,21 @@ export default function TicketsPage() {
     });
   };
 
+  const handleUpdate = (e: any, index: number) => {
+    e.preventDefault();
+    setCurrentTicket(tickets[index]);
+    setIsUpdating(true);
+  };
+
+  const handleHide = () => {
+    setIsUpdating(false);
+    setIsAdding(false);
+
+    axios.get("https://localhost:7127/api/Tickets").then((response) => {
+      setTickets(response.data);
+    });
+  };
+
   return (
     <>
       <h1>Tickets CRUD</h1>
@@ -116,8 +136,11 @@ export default function TicketsPage() {
                   {format(ticket.date, "MMMM-dd-yyyy")}
                 </TableCell>
                 <TableCell sx={cellsTheme}>
-                  <a href="#">Update</a>&nbsp;&nbsp;&nbsp;
-                  <a href="#" onClick={(e) => handleDelete(e, index)}>
+                  <a href="#update" onClick={(e) => handleUpdate(e, index)}>
+                    Update
+                  </a>
+                  &nbsp;&nbsp;&nbsp;
+                  <a href="#delete" onClick={(e) => handleDelete(e, index)}>
                     Delete
                   </a>
                 </TableCell>
@@ -125,7 +148,11 @@ export default function TicketsPage() {
             ))}
             <TableRow sx={{ backgroundColor: "#f2eeeb" }}>
               <TableCell colSpan={5} sx={cellsTheme}>
-                <Button sx={buttonTheme} variant="contained">
+                <Button
+                  sx={buttonTheme}
+                  onClick={() => setIsAdding(true)}
+                  variant="contained"
+                >
                   Add New
                 </Button>
               </TableCell>
@@ -133,6 +160,10 @@ export default function TicketsPage() {
           </TableBody>
         </Table>
       </TableContainer>
+      {isUpdating && currentTicket && (
+        <UpdateTicket ticket={currentTicket} onHide={handleHide} />
+      )}
+      {isAdding && <AddTicket onHide={handleHide} />}
     </>
   );
 }

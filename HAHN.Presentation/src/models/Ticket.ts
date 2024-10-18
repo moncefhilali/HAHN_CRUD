@@ -2,7 +2,7 @@ export interface Ticket {
   ticketId: number;
   description: string;
   status: TicketStatus;
-  date: string;
+  date: Date;
 }
 
 export enum TicketStatus {

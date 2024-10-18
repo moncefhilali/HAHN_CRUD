@@ -2,11 +2,15 @@ import "./styles.css";
 import TicketsPage from "./pages/TicketsPage";
 import { Bounce, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 
 function App() {
   return (
     <>
-      <TicketsPage />
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <TicketsPage />
+      </LocalizationProvider>
       <ToastContainer
         position="top-center"
         autoClose={5000}
