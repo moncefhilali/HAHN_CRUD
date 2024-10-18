@@ -1,3 +1,11 @@
+export interface PaginatedTickets {
+  totalCount: number;
+  pageSize: number;
+  pageNumber: number;
+  totalPages: number;
+  tickets?: Ticket[];
+}
+
 export interface Ticket {
   ticketId: number;
   description: string;

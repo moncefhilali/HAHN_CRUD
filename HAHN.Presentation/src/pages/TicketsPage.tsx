@@ -6,11 +6,12 @@ import {
   TableCell,
   TableContainer,
   TableHead,
+  TablePagination,
   TableRow,
 } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Ticket } from "../models/Ticket";
+import { PaginatedTickets, Ticket } from "../models/Ticket";
 import { format } from "date-fns";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
@@ -23,12 +24,47 @@ export default function TicketsPage() {
   const [isUpdating, setIsUpdating] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const [currentTicket, setCurrentTicket] = useState<Ticket>();
+  const [paginatedTickets, setPaginatedTickets] = useState<PaginatedTickets>({
+    pageNumber: 1,
+    pageSize: 5,
+    totalCount: 0,
+    totalPages: 0,
+    tickets: [],
+  });
+
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   useEffect(() => {
-    axios.get("https://localhost:7127/api/Tickets").then((response) => {
-      setTickets(response.data);
-    });
+    axios
+      .get(
+        `https://localhost:7127/api/Tickets/paginated?pageNumber=${1}&pageSize=${rowsPerPage}`
+      )
+      .then((response) => {
+        setPaginatedTickets(response.data);
+        setTickets(response.data.tickets);
+      });
   }, []);
+
+  const handleChangePage = (event: any, newPage: number) => {
+    setPage(newPage);
+
+    axios
+      .get(
+        `https://localhost:7127/api/Tickets/paginated?pageNumber=${
+          newPage + 1
+        }&pageSize=${rowsPerPage}`
+      )
+      .then((response) => {
+        setPaginatedTickets(response.data);
+        setTickets(response.data.tickets);
+      });
+  };
+
+  const handleChangeRowsPerPage = (event: any) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   const headCellsTheme = {
     color: "white",
@@ -102,14 +138,19 @@ export default function TicketsPage() {
     setIsUpdating(false);
     setIsAdding(false);
 
-    axios.get("https://localhost:7127/api/Tickets").then((response) => {
-      setTickets(response.data);
-    });
+    axios
+      .get(
+        `https://localhost:7127/api/Tickets/paginated?pageNumber=${1}&pageSize=${rowsPerPage}`
+      )
+      .then((response) => {
+        setPaginatedTickets(response.data);
+        setTickets(response.data.tickets);
+      });
   };
 
   return (
     <>
-      <h1>Tickets CRUD</h1>
+      <h1 className="tickets-header">Tickets CRUD</h1>
       <TableContainer component={Card} sx={tableTheme}>
         <Table>
           <TableHead sx={{ backgroundColor: "#02a459" }}>
@@ -122,30 +163,32 @@ export default function TicketsPage() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {tickets.map((ticket, index) => (
-              <TableRow
-                key={ticket.ticketId}
-                sx={{ backgroundColor: "#f2eeeb" }}
-              >
-                <TableCell sx={cellsTheme}>{ticket.ticketId}</TableCell>
-                <TableCell sx={cellsTheme}>{ticket.description}</TableCell>
-                <TableCell sx={cellsTheme}>
-                  {ticket.status === 0 ? "Closed" : "Open"}
-                </TableCell>
-                <TableCell sx={cellsTheme}>
-                  {format(ticket.date, "MMMM-dd-yyyy")}
-                </TableCell>
-                <TableCell sx={cellsTheme}>
-                  <a href="#update" onClick={(e) => handleUpdate(e, index)}>
-                    Update
-                  </a>
-                  &nbsp;&nbsp;&nbsp;
-                  <a href="#delete" onClick={(e) => handleDelete(e, index)}>
-                    Delete
-                  </a>
-                </TableCell>
-              </TableRow>
-            ))}
+            {tickets &&
+              tickets.length > 0 &&
+              tickets.map((ticket, index) => (
+                <TableRow
+                  key={ticket.ticketId}
+                  sx={{ backgroundColor: "#f2eeeb" }}
+                >
+                  <TableCell sx={cellsTheme}>{ticket.ticketId}</TableCell>
+                  <TableCell sx={cellsTheme}>{ticket.description}</TableCell>
+                  <TableCell sx={cellsTheme}>
+                    {ticket.status === 0 ? "Closed" : "Open"}
+                  </TableCell>
+                  <TableCell sx={cellsTheme}>
+                    {format(ticket.date, "MMMM-dd-yyyy")}
+                  </TableCell>
+                  <TableCell sx={cellsTheme}>
+                    <a href="#update" onClick={(e) => handleUpdate(e, index)}>
+                      Update
+                    </a>
+                    &nbsp;&nbsp;&nbsp;
+                    <a href="#delete" onClick={(e) => handleDelete(e, index)}>
+                      Delete
+                    </a>
+                  </TableCell>
+                </TableRow>
+              ))}
             <TableRow sx={{ backgroundColor: "#f2eeeb" }}>
               <TableCell colSpan={5} sx={cellsTheme}>
                 <Button
@@ -160,6 +203,16 @@ export default function TicketsPage() {
           </TableBody>
         </Table>
       </TableContainer>
+      <TablePagination
+        sx={{ width: "90%" }}
+        rowsPerPageOptions={[5, 10, 25]}
+        component="div"
+        count={paginatedTickets.totalCount}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
       {isUpdating && currentTicket && (
         <UpdateTicket ticket={currentTicket} onHide={handleHide} />
       )}
