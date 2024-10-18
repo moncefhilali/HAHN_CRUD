@@ -1,0 +1,9 @@
+body {
+  background-color: #f2eeeb;
+}
+
+.react-confirm-alert-button-group button {
+  background: #02a459 !important;
+  color: white !important;
+  padding-left: "20px" !important;
+}
