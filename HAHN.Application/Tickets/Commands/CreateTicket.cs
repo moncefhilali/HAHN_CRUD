@@ -22,8 +22,10 @@ namespace HAHN.Application.Tickets.Commands
             public async Task<Ticket?> Handle(Command request, CancellationToken cancellationToken)
             {
                 var ticket = await _repository.CreateAsync(request.Ticket);
-                // add validation
-                return null;
+                if (ticket is null)
+                    return null;
+
+                return ticket;
             }
         }
     }

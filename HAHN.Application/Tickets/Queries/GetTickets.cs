@@ -19,12 +19,6 @@ namespace HAHN.Application.Tickets.Queries
             public async Task<List<Ticket?>> Handle(Query request, CancellationToken cancellationToken)
             {
                 var tickets = await _repository.GetAllAsync();
-
-                // apply filtering
-
-
-                // apply sorting
-
                 return tickets.ToList();
             }
         }
