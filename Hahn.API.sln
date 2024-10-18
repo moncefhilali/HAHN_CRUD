@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HAHN.Application", "HAHN.Ap
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HAHN.Infrastructure", "HAHN.Infrastructure\HAHN.Infrastructure.csproj", "{CEBFB0AB-25D6-4B03-8BD4-94D9E1ED7819}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HAHN.Tests", "HAHN.Tests\HAHN.Tests.csproj", "{C8EFE693-5858-4E03-BF7B-604DAA083A87}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{CEBFB0AB-25D6-4B03-8BD4-94D9E1ED7819}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CEBFB0AB-25D6-4B03-8BD4-94D9E1ED7819}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CEBFB0AB-25D6-4B03-8BD4-94D9E1ED7819}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8EFE693-5858-4E03-BF7B-604DAA083A87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8EFE693-5858-4E03-BF7B-604DAA083A87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8EFE693-5858-4E03-BF7B-604DAA083A87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8EFE693-5858-4E03-BF7B-604DAA083A87}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
