@@ -27,9 +27,6 @@ namespace HAHN.Application.Tickets.Queries
                 return new PaginatedTickets
                 {
                     TotalCount = totalCount,
-                    PageSize = request.PageSize,
-                    PageNumber = request.PageNumber,
-                    TotalPages = (int)Math.Ceiling((double)totalCount / request.PageSize),
                     Tickets = tickets.ToList()
                 };
             }

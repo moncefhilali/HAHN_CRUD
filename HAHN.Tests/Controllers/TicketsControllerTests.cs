@@ -7,11 +7,6 @@ using HAHN.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HAHN.Tests.Controllers
 {
@@ -32,10 +27,7 @@ namespace HAHN.Tests.Controllers
             // Arrange
             var expectedTickets = new PaginatedTickets
             {
-                PageNumber = 1,
-                PageSize = 5,
                 TotalCount = 10,
-                TotalPages = 2,
                 Tickets =
                 [
                     new() { TicketId = 1, Description = "Ticket 1", Status = TicketStatus.Open, Date = DateTime.UtcNow },
@@ -54,10 +46,7 @@ namespace HAHN.Tests.Controllers
             var actionResult = Assert.IsType<OkObjectResult>(result);
             var actualTickets = Assert.IsAssignableFrom<PaginatedTickets>(actionResult.Value);
 
-            Assert.Equal(expectedTickets.PageNumber, actualTickets.PageNumber);
-            Assert.Equal(expectedTickets.PageSize, actualTickets.PageSize);
             Assert.Equal(expectedTickets.TotalCount, actualTickets.TotalCount);
-            Assert.Equal(expectedTickets.TotalPages, actualTickets.TotalPages);
             Assert.Equal(expectedTickets.Tickets.Count, actualTickets.Tickets.Count);
         }
 
