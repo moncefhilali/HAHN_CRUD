@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   MenuItem,
   Table,
@@ -65,6 +64,8 @@ export default function UpdateTicket({ ticket, onHide }: Props) {
             console.log(response);
           }
         });
+    } else {
+      console.log(errors);
     }
   };
 

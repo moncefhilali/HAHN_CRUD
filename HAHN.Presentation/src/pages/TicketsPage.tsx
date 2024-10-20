@@ -64,6 +64,17 @@ export default function TicketsPage() {
   const handleChangeRowsPerPage = (event: any) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
+
+    axios
+      .get(
+        `https://localhost:7127/api/Tickets/paginated?pageNumber=${1}&pageSize=${
+          event.target.value
+        }`
+      )
+      .then((response) => {
+        setPaginatedTickets(response.data);
+        setTickets(response.data.tickets);
+      });
   };
 
   const headCellsTheme = {
