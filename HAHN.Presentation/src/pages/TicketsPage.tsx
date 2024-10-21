@@ -9,6 +9,7 @@ import {
   TablePagination,
   TableRow,
   TableSortLabel,
+  TextField,
 } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -27,6 +28,7 @@ export default function TicketsPage() {
   const [currentTicket, setCurrentTicket] = useState<Ticket>();
   const [orderBy, setOrderBy] = useState("id");
   const [order, setOrder] = useState<"asc" | "desc" | undefined>("asc");
+  const [filter, setFilter] = useState("");
   const [paginatedTickets, setPaginatedTickets] = useState<PaginatedTickets>({
     pageNumber: 1,
     pageSize: 5,
@@ -56,7 +58,7 @@ export default function TicketsPage() {
       .get(
         `https://localhost:7127/api/Tickets/paginated?pageNumber=${
           newPage + 1
-        }&pageSize=${rowsPerPage}&sorting=${order}`
+        }&pageSize=${rowsPerPage}&sorting=${order}&filter=${filter}`
       )
       .then((response) => {
         setPaginatedTickets(response.data);
@@ -72,7 +74,7 @@ export default function TicketsPage() {
       .get(
         `https://localhost:7127/api/Tickets/paginated?pageNumber=${1}&pageSize=${
           event.target.value
-        }`
+        }&sorting=${order}&filter=${filter}`
       )
       .then((response) => {
         setPaginatedTickets(response.data);
@@ -87,7 +89,7 @@ export default function TicketsPage() {
 
       axios
         .get(
-          `https://localhost:7127/api/Tickets/paginated?pageNumber=${1}&pageSize=${rowsPerPage}&sorting=${sorting}`
+          `https://localhost:7127/api/Tickets/paginated?pageNumber=${1}&pageSize=${rowsPerPage}&sorting=${sorting}&filter=${filter}`
         )
         .then((response) => {
           setPaginatedTickets(response.data);
@@ -97,6 +99,22 @@ export default function TicketsPage() {
           setPage(0);
         });
     };
+
+  const handleFilter = (e: any) => {
+    setPage(0);
+    setFilter(e.target.value);
+
+    axios
+      .get(
+        `https://localhost:7127/api/Tickets/paginated?pageNumber=${1}&pageSize=${rowsPerPage}&sorting=${order}&filter=${
+          e.target.value
+        }`
+      )
+      .then((response) => {
+        setPaginatedTickets(response.data);
+        setTickets(response.data.tickets);
+      });
+  };
 
   const headCellsTheme = {
     color: "white",
@@ -114,6 +132,7 @@ export default function TicketsPage() {
   };
 
   const tableTheme = {
+    backgroundColor: "#f2eeeb",
     borderRadius: 0,
     width: "90%",
     boxShadow: 0,
@@ -184,6 +203,13 @@ export default function TicketsPage() {
     <>
       <h1 className="tickets-header">Tickets CRUD</h1>
       <TableContainer component={Card} sx={tableTheme}>
+        <TextField
+          sx={{ width: "100%" }}
+          id="filled-basic"
+          label="Ticket filter"
+          variant="filled"
+          onChange={(e) => handleFilter(e)}
+        />
         <Table>
           <TableHead sx={{ backgroundColor: "#02a459" }}>
             <TableRow sx={{ borderRadius: 0 }}>
@@ -242,17 +268,17 @@ export default function TicketsPage() {
             </TableRow>
           </TableBody>
         </Table>
+        <TablePagination
+          sx={{ border: "solid #e4e4e4 2px" }}
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={paginatedTickets.totalCount}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
       </TableContainer>
-      <TablePagination
-        sx={{ width: "90%" }}
-        rowsPerPageOptions={[5, 10, 25]}
-        component="div"
-        count={paginatedTickets.totalCount}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
       {isUpdating && currentTicket && (
         <UpdateTicket ticket={currentTicket} onHide={handleHide} />
       )}

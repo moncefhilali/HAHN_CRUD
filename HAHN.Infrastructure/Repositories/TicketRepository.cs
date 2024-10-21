@@ -10,16 +10,21 @@ namespace HAHN.Infrastructure.Repositories
         private readonly HahnDbContext _context;
         public TicketRepository(HahnDbContext context) : base(context) => _context = context;
 
-        public async Task<(IEnumerable<Ticket> Tickets, int TotalCount)> GetPaginatedTicketsAsync(int pageNumber, int pageSize, string sorting)
+        public async Task<(IEnumerable<Ticket> Tickets, int TotalCount)> GetPaginatedTicketsAsync(int pageNumber, int pageSize, string sorting, string filter)
         {
-            var totalTickets = await _context.Tickets.CountAsync();
             IList<Ticket> tickets = [];
-
             if (sorting == "desc")
-                tickets = await _context.Tickets.OrderByDescending(t => t.TicketId).ToListAsync();
+                tickets = await _context.Tickets
+                    .OrderByDescending(t => t.TicketId)
+                    .Where(t => t.Description.Contains(filter))
+                    .ToListAsync();
             else
-                tickets = await _context.Tickets.OrderBy(t => t.TicketId).ToListAsync();
+                tickets = await _context.Tickets
+                    .OrderBy(t => t.TicketId)
+                    .Where(t => t.Description.Contains(filter))
+                    .ToListAsync();
 
+            var totalTickets = tickets.Count();
             tickets = tickets
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)

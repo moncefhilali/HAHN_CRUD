@@ -11,6 +11,7 @@ namespace HAHN.Application.Tickets.Queries
             public int PageNumber { get; set; }
             public int PageSize { get; set; }
             public string Sorting { get; set; }
+            public string Filter { get; set; }
         }
 
         public class Handler : IRequestHandler<Query, PaginatedTickets>
@@ -23,7 +24,7 @@ namespace HAHN.Application.Tickets.Queries
 
             public async Task<PaginatedTickets> Handle(Query request, CancellationToken cancellationToken)
             {
-                var (tickets, totalCount) = await _repository.GetPaginatedTicketsAsync(request.PageNumber, request.PageSize, request.Sorting);
+                var (tickets, totalCount) = await _repository.GetPaginatedTicketsAsync(request.PageNumber, request.PageSize, request.Sorting, request.Filter);
 
                 return new PaginatedTickets
                 {
