@@ -8,6 +8,7 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  TableSortLabel,
 } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -24,6 +25,8 @@ export default function TicketsPage() {
   const [isUpdating, setIsUpdating] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const [currentTicket, setCurrentTicket] = useState<Ticket>();
+  const [orderBy, setOrderBy] = useState("id");
+  const [order, setOrder] = useState<"asc" | "desc" | undefined>("asc");
   const [paginatedTickets, setPaginatedTickets] = useState<PaginatedTickets>({
     pageNumber: 1,
     pageSize: 5,
@@ -38,7 +41,7 @@ export default function TicketsPage() {
   useEffect(() => {
     axios
       .get(
-        `https://localhost:7127/api/Tickets/paginated?pageNumber=${1}&pageSize=${rowsPerPage}`
+        `https://localhost:7127/api/Tickets/paginated?pageNumber=${1}&pageSize=${rowsPerPage}&sorting=${order}`
       )
       .then((response) => {
         setPaginatedTickets(response.data);
@@ -53,7 +56,7 @@ export default function TicketsPage() {
       .get(
         `https://localhost:7127/api/Tickets/paginated?pageNumber=${
           newPage + 1
-        }&pageSize=${rowsPerPage}`
+        }&pageSize=${rowsPerPage}&sorting=${order}`
       )
       .then((response) => {
         setPaginatedTickets(response.data);
@@ -76,6 +79,24 @@ export default function TicketsPage() {
         setTickets(response.data.tickets);
       });
   };
+
+  const createSortHandler =
+    (property: any) => (event: React.MouseEvent<unknown>) => {
+      const sorting = order === "asc" ? "desc" : "asc";
+      console.log(sorting);
+
+      axios
+        .get(
+          `https://localhost:7127/api/Tickets/paginated?pageNumber=${1}&pageSize=${rowsPerPage}&sorting=${sorting}`
+        )
+        .then((response) => {
+          setPaginatedTickets(response.data);
+          setTickets(response.data.tickets);
+          setOrder(sorting);
+          setOrderBy(property);
+          setPage(0);
+        });
+    };
 
   const headCellsTheme = {
     color: "white",
@@ -151,7 +172,7 @@ export default function TicketsPage() {
 
     axios
       .get(
-        `https://localhost:7127/api/Tickets/paginated?pageNumber=${1}&pageSize=${rowsPerPage}`
+        `https://localhost:7127/api/Tickets/paginated?pageNumber=${1}&pageSize=${rowsPerPage}&sorting=${order}`
       )
       .then((response) => {
         setPaginatedTickets(response.data);
@@ -166,7 +187,15 @@ export default function TicketsPage() {
         <Table>
           <TableHead sx={{ backgroundColor: "#02a459" }}>
             <TableRow sx={{ borderRadius: 0 }}>
-              <TableCell sx={headCellsTheme}>Ticket Id</TableCell>
+              <TableCell sx={headCellsTheme}>
+                <TableSortLabel
+                  active={orderBy === "id"}
+                  direction={order}
+                  onClick={createSortHandler(order)}
+                >
+                  Ticket Id
+                </TableSortLabel>
+              </TableCell>
               <TableCell sx={headCellsTheme}>Description</TableCell>
               <TableCell sx={headCellsTheme}>Status</TableCell>
               <TableCell sx={headCellsTheme}>Date</TableCell>

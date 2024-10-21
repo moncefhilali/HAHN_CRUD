@@ -25,9 +25,9 @@ namespace Hahn.API.Controllers
         }
 
         [HttpGet("paginated/")]
-        public async Task<IActionResult> GetPaginatedTickets(int pageNumber = 1, int pageSize = 5)
+        public async Task<IActionResult> GetPaginatedTickets(int pageNumber = 1, int pageSize = 5, string sorting = "asc")
         {
-            var response = await _mediator.Send(new GetPaginatedTickets.Query() { PageNumber = pageNumber, PageSize = pageSize });
+            var response = await _mediator.Send(new GetPaginatedTickets.Query() { PageNumber = pageNumber, PageSize = pageSize, Sorting = sorting });
             return Ok(response);
         }
 
